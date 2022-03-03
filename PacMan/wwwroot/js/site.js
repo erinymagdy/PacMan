@@ -18,11 +18,6 @@ const enemyImg = document.getElementById("Enemy");
 const width = wall.width;
 const height = wall.height;
 
-const boundaries = []
-const tracks = []
-const foods2 = []
-
-const direction = { left: 0, up: 1, right: 2, down: 3 };
 let lastKey = ''
 let score = 0
 const Keys = {
@@ -77,13 +72,23 @@ class Food2 {
         context.drawImage(this.image, this.position.x, this.position.y, this.image.width, this.image.height);
     }
 }
+class Food1 {
+    constructor({ position, image }) {
+        this.position = position,
+            this.image = image
+    }
+    draw() {
+        context.drawImage(this.image, this.position.x, this.position.y, this.image.width, this.image.height);
+    }
+}
 class Enemy {
+    static speed =2
     constructor({ position, velocity, image }) {
         this.position = position,
             this.velocity = velocity,
             this.image = image
-     
-
+        this.prevCollessions = []
+        this.speed = this.speed
     }
     draw() {
         context.drawImage(this.image, this.position.x, this.position.y, this.image.width, this.image.height);
@@ -102,7 +107,7 @@ const map = [
     [1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1],
-    [1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0, 1, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1],
     [1, 6, 6, 1, 0, 1, 6, 6, 6, 6, 6, 6, 6, 1, 0, 1, 6, 6, 1],
     [1, 1, 1, 1, 0, 1, 6, 1, 1, 6, 1, 1, 6, 1, 0, 1, 1, 1, 1],
@@ -115,14 +120,17 @@ const map = [
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
     [1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1],
-    [1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1],
+    [1, 1, 0, 1, 2, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1],
     [1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
     [1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 
 ]
-
+const boundaries = []
+const tracks = []
+const foods2 = []
+const foods1 = []
 const player = new Player({
     position:
     {
@@ -145,7 +153,7 @@ const enemies = [
         },
         velocity:
         {
-            x: 0,
+            x: Enemy.speed,
             y: 0
         },
         image: enemyImg
@@ -162,7 +170,7 @@ map.forEach((row, i) => {
                             x: Boundary.width * j,
                             y: Boundary.height * i
                         },
-                        image : wall
+                        image: wall
                     })
                 )
                 break
@@ -188,7 +196,18 @@ map.forEach((row, i) => {
                     })
                 )
                 break
-            }
+            case 2:// food1
+                foods1.push(
+                    new Food1({
+                        position: {
+                            x: Boundary.width * j,
+                            y: Boundary.height * i
+                        },
+                        image: food1
+                    })
+                )
+            break
+        }
     })
 })
 function collides({ rect1, rect2 }) { // rect 1: pacman , rect 2: wall
@@ -208,7 +227,8 @@ function animate() {
                 if (collides({ rect1: { ...player, velocity: {x :0, y:-5} } , rect2: bound })) {
                     player.velocity.y = 0
                 }
-                else player.velocity.y = -5
+                else
+                    player.velocity.y = -5
             })
         }
     }
@@ -216,10 +236,10 @@ function animate() {
         for (let i = 0; i < boundaries.length; i++) {
             const bound = boundaries[i]
             boundaries.forEach((boundary) => {
-                //if (collides({ rect1: { ...player, velocity: { x: -5, y: 0 } }, rect2: bound })) {
-                //    player.velocity.x = 0
-                //}
-                //else
+                if (collides({ rect1: { ...player, velocity: { x: -5, y: 0 } }, rect2: bound })) {
+                    player.velocity.x = 0
+                }
+                else
                     player.velocity.x = -5
             })
         }
@@ -228,10 +248,10 @@ function animate() {
         for (let i = 0; i < boundaries.length; i++) {
             const bound = boundaries[i]
             boundaries.forEach((boundary) => {
-                //if (collides({ rect1: { ...player, velocity: { x: 0, y: 5 } }, rect2: bound })) {
-                //    player.velocity.y = 0
-                //}
-                //else
+                if (collides({ rect1: { ...player, velocity: { x: 0, y: 5 } }, rect2: bound })) {
+                    player.velocity.y = 0
+                }
+                else
                     player.velocity.y = 5
             })
         }
@@ -240,10 +260,10 @@ function animate() {
         for (let i = 0; i < boundaries.length; i++) {
             const bound = boundaries[i]
             boundaries.forEach((boundary) => {
-                //if (collides({ rect1: { ...player, velocity: { x: 5, y: 0 } }, rect2: bound })) {
-                //    player.velocity.x = 0
-                //}
-                //else
+                if (collides({ rect1: { ...player, velocity: { x: 5, y: 0 } }, rect2: bound })) {
+                    player.velocity.x = 0
+                }
+                else
                     player.velocity.x = 5
             })
         }
@@ -272,6 +292,53 @@ function animate() {
 
     enemies.forEach((enemy )=> {
         enemy.update()
+        const collisions =[]
+        boundaries.forEach((boundary) => {
+
+            if (!collisions.includes('right') && collides({ rect1: { ...enemy, velocity: { x: Enemy.speed, y: 0 } }, rect2: boundary })) {
+                collisions.push('right')
+            }
+            if (!collisions.includes('left') && collides({ rect1: { ...enemy, velocity: { x: -Enemy.speed, y: 0 } }, rect2: boundary })) {
+                collisions.push('left')
+            }
+            if (!collisions.includes('up') && collides({ rect1: { ...enemy, velocity: { x: 0, y: -Enemy.speed } }, rect2: boundary })) {
+                collisions.push('up')
+            }
+            if (!collisions.includes('down') && collides({ rect1: { ...enemy, velocity: { x: 0, y: Enemy.speed } }, rect2: boundary })) {
+                collisions.push('down')
+            }
+            if (collisions.length > enemy.prevCollessions.length)
+                enemy.prevCollessions = collisions
+            if (JSON.stringify(collisions) !== JSON.stringify(enemy.prevCollessions)) {
+                if (enemy.velocity.x > 0) enemy.prevCollessions.push('right')
+                if (enemy.velocity.x < 0) enemy.prevCollessions.push('left')
+                if (enemy.velocity.y < 0) enemy.prevCollessions.push('up')
+                if(enemy.velocity.y > 0) enemy.prevCollessions.push('down')
+                const pathways = enemy.prevCollessions.filter((collision) => {
+                    return !collisions.includes(collision)
+                })
+                const direction = pathways[Math.floor(Math.random() * pathways.length)]
+                switch (direction) {
+                    case 'down':
+                        enemy.velocity.y = Enemy.speed
+                        enemy.velocity.x = 0
+                        break
+                    case 'up':
+                        enemy.velocity.y = -Enemy.speed
+                        enemy.velocity.x = 0
+                        break
+                    case 'right':
+                        enemy.velocity.y = 0
+                        enemy.velocity.x = Enemy.speed
+                        break
+                    case 'left':
+                        enemy.velocity.y = 0
+                        enemy.velocity.x = -Enemy.speed
+                        break
+                }
+                enemy.prevCollessions=[]
+            }
+        })
 
     })
 }
@@ -297,7 +364,6 @@ addEventListener('keydown', ({ key }) => {
 
     }
 })
-
 addEventListener('keyup', ({ key }) => {
     switch (key) {
         case 'ArrowUp':
