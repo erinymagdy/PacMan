@@ -12,7 +12,8 @@ const food1 = document.getElementById("Food1");
 const food2 = document.getElementById("Food2");
 const pcRight = document.getElementById("PcRight");
 const scoreEl = document.getElementById("Score");
-const enemyImg = document.getElementById("Enemy");
+const enemyImg1 = document.getElementById("Enemy1");
+const enemyImg2 = document.getElementById("Enemy2");
 
 
 const width = wall.width;
@@ -89,9 +90,12 @@ class Enemy {
             this.image = image
         this.prevCollessions = []
         this.speed = this.speed
+        this.scared= false
     }
     draw() {
+
         context.drawImage(this.image, this.position.x, this.position.y, this.image.width, this.image.height);
+      /*  c.fillStyle = this.scared? 'blue ': this*/
     }
     update() {
         this.draw()
@@ -157,6 +161,19 @@ const enemies = [
             y: 0
         },
         image: enemyImg
+    }),
+    new Enemy({
+        position:
+        {
+            x: Boundary.width * 6 + Boundary.width / 2,
+            y: Boundary.height + Boundary.height / 2
+        },
+        velocity:
+        {
+            x: Enemy.speed,
+            y: 0
+        },
+        image: enemyImg2
     })
 ]
 
@@ -217,8 +234,9 @@ function collides({ rect1, rect2 }) { // rect 1: pacman , rect 2: wall
         && rect1.position.y + rect1.image.height + rect1.velocity.y >= rect2.position.y
         && rect1.position.x - rect1.image.width + rect1.velocity.x <= rect2.position.x + rect2.width)
 }
+let animationId
 function animate() {
-    requestAnimationFrame(animate)
+    animationId=requestAnimationFrame(animate)
     context.clearRect(0, 0, canvas.width, canvas.height)
     if (Keys.ArrowUp.pressed && lastKey == 'ArrowUp') {
         for (let i = 0; i < boundaries.length; i++) {
@@ -268,7 +286,43 @@ function animate() {
             })
         }
     }
-    for (let i = foods2.length - 1; 0 < i; i--) {
+    // player collides with enemy
+    for (let i = enemies.length - 1; 0 <= i; i--) {
+        const enemy = enemies[i]
+        if (Math.hypot(enemy.position.x - player.position.x,
+            enemy.position.y - player.position.y)
+            < enemy.image.width + player.image.width) {
+            if (enemy.scared) {
+                enemies[i].image = track
+                console.log('player eat enemy')
+            }
+            else {
+                cancelAnimationFrame(animationId)
+                console.log('you lose ')
+               
+            }     
+    }
+    // player collides with big food 
+    for (let i = foods1.length - 1; 0 <= i; i--) {
+        const food1 = foods1[i]
+        food1.draw()
+        if (Math.hypot(food1.position.x - player.position.x,
+            food1.position.y - player.position.y)
+            < food1.image.width + player.image.width) {
+            console.log('touching big food')
+            foods1[i].image = track
+            enemies.forEach(enemy => {
+                enemy.scared = true
+
+                setTimeout(() => {
+                    enemy.scared = false
+                }, 3000)
+            })
+       
+        }
+    }
+    // player collides with small food 
+    for (let i = foods2.length - 1; 0 <= i; i--) {
         const food2 = foods2[i]
         food2.draw()
             if (Math.hypot(food2.position.x - player.position.x,
