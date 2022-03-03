@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>PacMan</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+
+
+</head>
+<body>
+    <div class="Container text-center">
+        <h1 class="display-4 ">Welcome to PacMan Game</h1>
+        <p class="label"><span >Score : </span><span id="Score">0</span></p>
+        <canvas id="Canvas" class="Canvas">
+        </canvas>
+        <img src="~/images/BG/wall.png" id="Wall" class="BG" />
+        <img src="~/images/BG/track.png" id="Track" class="BG" />
+        <img src="~/images/BG/food1.png" id="Food1" class="BG" />
+        <img src="~/images/BG/food2.png" id="Food2" class="BG" />
+        <img src="~/images/main character/Right/RightRight1.png" id="PcRight" class="BG" />
+
+        <p><button id="Start" class="btn btn-info">Start</button></p>
+    </div>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/js/site.js"></script>
+</body>
+</html>
+
