@@ -1,10 +1,14 @@
 ﻿body {
-    margin: 10px;
+    margin: 0;
     background-color: black;
     color: white;
     text-align: center;
+    max-width: 100%;
+    overflow-x: hidden;
+    max-height: 100%;
+    
 }
-.BG{
+.BG img{
     width: 40px;
     height:40px;
     display: none;
@@ -15,4 +19,6 @@
 }
 .Canvas {
     text-align: center;
+    width: auto;
+    padding: 20px;
 }

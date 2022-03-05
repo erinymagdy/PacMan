@@ -131,6 +131,7 @@ const map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 
 ]
+const editMap =map
 const boundaries = []
 const tracks = []
 const foods2 = []
@@ -160,7 +161,7 @@ const enemies = [
             x: Enemy.speed,
             y: 0
         },
-        image: enemyImg
+        image: enemyImg1
     }),
     new Enemy({
         position:
@@ -236,13 +237,13 @@ function collides({ rect1, rect2 }) { // rect 1: pacman , rect 2: wall
 }
 let animationId
 function animate() {
-    animationId=requestAnimationFrame(animate)
+    animationId = requestAnimationFrame(animate)
     context.clearRect(0, 0, canvas.width, canvas.height)
     if (Keys.ArrowUp.pressed && lastKey == 'ArrowUp') {
         for (let i = 0; i < boundaries.length; i++) {
             const bound = boundaries[i]
             boundaries.forEach((boundary) => {
-                if (collides({ rect1: { ...player, velocity: {x :0, y:-5} } , rect2: bound })) {
+                if (collides({ rect1: { ...player, velocity: { x: 0, y: -5 } }, rect2: bound })) {
                     player.velocity.y = 0
                 }
                 else
@@ -287,44 +288,45 @@ function animate() {
         }
     }
     // player collides with enemy
-    for (let i = enemies.length - 1; 0 <= i; i--) {
-        const enemy = enemies[i]
-        if (Math.hypot(enemy.position.x - player.position.x,
-            enemy.position.y - player.position.y)
-            < enemy.image.width + player.image.width) {
-            if (enemy.scared) {
-                enemies[i].image = track
-                console.log('player eat enemy')
-            }
-            else {
-                cancelAnimationFrame(animationId)
-                console.log('you lose ')
-               
-            }     
-    }
-    // player collides with big food 
-    for (let i = foods1.length - 1; 0 <= i; i--) {
-        const food1 = foods1[i]
-        food1.draw()
-        if (Math.hypot(food1.position.x - player.position.x,
-            food1.position.y - player.position.y)
-            < food1.image.width + player.image.width) {
-            console.log('touching big food')
-            foods1[i].image = track
-            enemies.forEach(enemy => {
-                enemy.scared = true
+    //for (let i = enemies.length - 1; 0 <= i; i--) {
+    //    const enemy = enemies[i]
+    //    if (Math.hypot(enemy.position.x - player.position.x,
+    //        enemy.position.y - player.position.y)
+    //        < enemy.image.width + player.image.width) {
+    //        if (enemy.scared) {
+    //            enemies[i].image = track
+    //            console.log('player eat enemy')
+    //        }
+    //        else {
+    //            cancelAnimationFrame(animationId)
+    //            console.log('you lose ')
 
-                setTimeout(() => {
-                    enemy.scared = false
-                }, 3000)
-            })
-       
+    //        }
+    //    }
+    //}
+        // player collides with big food 
+    for (let i = foods1.length - 1; 0 <= i; i--) {
+            const food1 = foods1[i]
+            food1.draw()
+            if (Math.hypot(food1.position.x - player.position.x,
+                food1.position.y - player.position.y)
+                < food1.image.width + player.image.width) {
+                console.log('touching big food')
+                foods1[i].image = track
+                enemies.forEach(enemy => {
+                    enemy.scared = true
+
+                    setTimeout(() => {
+                        enemy.scared = false
+                    }, 3000)
+                })
+
+            }
         }
-    }
-    // player collides with small food 
+        // player collides with small food 
     for (let i = foods2.length - 1; 0 <= i; i--) {
-        const food2 = foods2[i]
-        food2.draw()
+            const food2 = foods2[i]
+            food2.draw()
             if (Math.hypot(food2.position.x - player.position.x,
                 food2.position.y - player.position.y)
                 < food2.image.width + player.image.width) {
@@ -335,18 +337,18 @@ function animate() {
                 scoreEl.innerHTML = score
             }
     }
+  
     boundaries.forEach((boundary) => {
-        boundary.draw()
-        if (collides({ rect1: player, rect2: boundary })) {
-            player.velocity.y = 0
-            player.velocity.x = 0
-        }
-    })
+            boundary.draw()
+            if (collides({ rect1: player, rect2: boundary })) {
+                player.velocity.y = 0
+                player.velocity.x = 0
+            }
+        })
     player.update()
-
-    enemies.forEach((enemy )=> {
+    enemies.forEach((enemy) => {
         enemy.update()
-        const collisions =[]
+        const collisions = []
         boundaries.forEach((boundary) => {
 
             if (!collisions.includes('right') && collides({ rect1: { ...enemy, velocity: { x: Enemy.speed, y: 0 } }, rect2: boundary })) {
@@ -367,7 +369,7 @@ function animate() {
                 if (enemy.velocity.x > 0) enemy.prevCollessions.push('right')
                 if (enemy.velocity.x < 0) enemy.prevCollessions.push('left')
                 if (enemy.velocity.y < 0) enemy.prevCollessions.push('up')
-                if(enemy.velocity.y > 0) enemy.prevCollessions.push('down')
+                if (enemy.velocity.y > 0) enemy.prevCollessions.push('down')
                 const pathways = enemy.prevCollessions.filter((collision) => {
                     return !collisions.includes(collision)
                 })
@@ -390,11 +392,13 @@ function animate() {
                         enemy.velocity.x = -Enemy.speed
                         break
                 }
-                enemy.prevCollessions=[]
+                enemy.prevCollessions = []
             }
         })
 
     })
+  
+    
 }
 animate()
 addEventListener('keydown', ({ key }) => {

@@ -15,18 +15,20 @@
         <p class="label"><span>Score : </span><span id="Score">0</span></p>
         <canvas id="Canvas" class="Canvas">
         </canvas>
-        <img src="~/images/BG/wall.png" id="Wall" class="BG" />
-        <img src="~/images/BG/track.png" id="Track" class="BG" />
-        <img src="~/images/BG/food1.png" id="Food1" class="BG" />
-        <img src="~/images/BG/food2.png" id="Food2" class="BG" />
-        <img src="~/images/main character/Right/RightRight1.png" id="PcRight" class="BG" />
-        <img src="~/images/Enemies/Enemy21.png" id=" Enemy1" class="BG" />
-        <img src="~/images/Enemies/Enemy30.png" id=" Enemy2" class="BG" />
+        <div class="BG">
+            <img src="~/images/BG/wall.png" id="Wall" class="wall" />
+            <img src="~/images/BG/track.png" id="Track" class="track" />
+            <img src="~/images/BG/food1.png" id="Food1" class="bigFood" />
+            <img src="~/images/BG/food2.png" id="Food2"  class="smallFood"/>
+            <img src="~/images/main character/Right/RightRight1.png" id="PcRight"  class="pacMan" />
+            <img src="~/images/Enemies/Enemy21.png" id="Enemy1"  />
+            <img src="~/images/Enemies/Enemy30.png" id="Enemy2"  />
+        </div>
 
-        <p><button id="Start" class="btn btn-info">Start</button></p>
+        <p><button id="Start" onclick="init()" class="btn btn-info">Start</button></p>
     </div>
     <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="~/js/site.js"></script>
+    <script src="~/js/test.js"></script>
 </body>
 </html>
 
