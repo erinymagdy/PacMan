@@ -49,6 +49,7 @@ class Player {
         this.position = position,
             this.velocity = velocity,
             this.image = image
+
     }
     draw() {
          context.drawImage(this.image, this.position.x, this.position.y, width, height);
@@ -213,6 +214,8 @@ map.forEach((row, i) => {
         }
     })
 })
+
+
 function init() {
     player.position.x = point
     player.position.y = point
@@ -238,6 +241,39 @@ function draw() {
     player.velocity.y = 0
     player.velocity.x = 0
 }
+function redraw({ type }) {
+    if (type = 'smallFood') {
+        for (let i = foods2.length - 1; 0 <= i; i--) {
+            const food2 = foods2[i]
+            if (food2.position.x === (player.position.x) && food2.position.y === player.position.y) {
+                food2.draw()
+                foods2[i].image = track
+                console.log('touch small food')
+
+            }
+        }
+    }
+    else if (type = 'bigFood') {
+            for (let i = foods1.length - 1; 0 <= i; i--) {
+                const food1 = foods1[i]
+                if (food1.position.x === (player.position.x) && food1.position.y === player.position.y) {
+                    food1.draw()
+                    foods1[i].image = track
+                    console.log('touch big food')
+                }
+            }
+        //enemies.forEach(enemy => {
+        //    enemy.scared = true
+
+        //    setTimeout(() => {
+        //        enemy.scared = false
+        //    }, 3000)
+        //})
+
+    }
+
+
+}
 function move() {
     requestAnimationFrame(move)
     context.clearRect(0, 0, canvas.width, canvas.height)
@@ -247,12 +283,15 @@ init()
 addEventListener('keydown', ({ key}) => {
     switch (key) {
         case 'ArrowUp':
-            console.log((player.position.y / point ) - 1, (player.position.x / point))
-            console.log(map[(player.position.y / point ) - 1][(player.position.x / point )])
+            console.log(map[(player.position.y / point) - 1][(player.position.x / point)])
             if ((map[(player.position.y / point ) - 1][(player.position.x / point )]) !== 1) {
                 if ((map[(player.position.y / point) - 1][(player.position.x / point)]) === 0) {
                     score += 10
                     scoreEl.innerHTML = score
+                    redraw({ type: 'smallFood' })
+                }
+                if ((map[(player.position.y / point) - 1][(player.position.x / point)]) === 2) {
+                    redraw({ type: 'bigFood' })
                 }
                 player.velocity.y = -5
                 player.position.y -= point
@@ -266,13 +305,17 @@ addEventListener('keydown', ({ key}) => {
             }
             break
         case 'ArrowLeft':
-            console.log((player.position.y / point ), (player.position.x / point ) - 1)
-            console.log(map[(player.position.y / point + 1)][(player.position.x / point ) - 1])
+            console.log(map[(player.position.y / point)][(player.position.x / point) - 1])
             if ((map[(player.position.y / point )][(player.position.x / point ) - 1]) !== 1) {
                 if ((map[(player.position.y / point )][(player.position.x / point ) - 1]) === 0) {
                     score += 1
                     scoreEl.innerHTML = score
+                    redraw({ type: 'smallFood' })
 
+                }
+                if ((map[(player.position.y / point)][(player.position.x / point) - 1]) === 2) {
+
+                    redraw({ type: 'bigFood' })
                 }
                 player.velocity.x = -5
                 player.position.x -= point
@@ -287,12 +330,16 @@ addEventListener('keydown', ({ key}) => {
             }
             break
         case 'ArrowDown':
-            console.log((player.position.y / point ) + 1, (player.position.x / point ))
-            console.log(map[(player.position.y / point ) + 1][(player.position.x / point )])
+            console.log(map[(player.position.y / point) + 1][(player.position.x / point)])
             if ((map[(player.position.y / point ) + 1][(player.position.x / point )]) !== 1) {
                 if ((map[(player.position.y / point ) + 1][(player.position.x / point )]) === 0) {
                     score += 10
                     scoreEl.innerHTML = score
+                    redraw({ type: 'smallFood' })
+                }
+                if ((map[(player.position.y / point) + 1][(player.position.x / point)]) === 2) {
+
+                    redraw({ type: 'bigFood' })
                 }
                 player.velocity.y = 5
                 player.position.y += point
@@ -306,14 +353,16 @@ addEventListener('keydown', ({ key}) => {
             }
             break
         case 'ArrowRight':
-            console.log((player.position.y/point ), (player.position.x /point ) + 1)
-            console.log(map[(player.position.y/point )][(player.position.x/point) + 1])
+            console.log(((map[(player.position.y / point)][(player.position.x / point) + 1])))
             if ((map[(player.position.y / point)][(player.position.x / point) + 1]) !== 1) {
                 if ((map[(player.position.y/point )][(player.position.x/point ) + 1]) === 0) {
                     score += 10
                     scoreEl.innerHTML = score
-                    map[(player.position.y / point)][(player.position.x / point) + 1] = 6
-                    draw()
+                    redraw({type:'smallFood'})
+                }
+                if ((map[(player.position.y / point)][(player.position.x / point) + 1]) === 2) {
+
+                    redraw({ type: 'bigFood' })
                 }
                 player.velocity.x = 5
                 player.position.x += point
