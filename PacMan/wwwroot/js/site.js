@@ -190,9 +190,7 @@ setInterval(function () {
         }
         if (((player.position.y / point) === (enemy.position.y / point))
             && ((player.position.x / point) === enemy.position.x / point)) {
-            console.log('it is enemy')
             if (enemy.scared === true) {
-                console.log('enemy scared')
                 eatEnemy = true
                 enemy.image = track
                 enemy.draw()
@@ -202,7 +200,6 @@ setInterval(function () {
                 if (confirm("GAME OVER")) {
                     document.location.reload();
                 }
-                console.log('you are lose')
             }
 
         }
@@ -215,13 +212,10 @@ setInterval(function () {
     }
 }, 100)
 
-
-
 function move() {
     requestAnimationFrame(move)
     context.clearRect(0, 0, canvas.width, canvas.height)
     draw()
-
 }
 move()
 addEventListener('keydown', ({ key }) => {
@@ -230,7 +224,6 @@ addEventListener('keydown', ({ key }) => {
             case 'ArrowUp':
                 if ((editMap[(player.position.y / point) - 1][(player.position.x / point)]) !== 1) {
                     if ((editMap[(player.position.y / point) - 1][(player.position.x / point)]) === 0) {
-                        console.log('small food')
 
                         score += 10
                         scoreEl.innerHTML = score
@@ -238,7 +231,6 @@ addEventListener('keydown', ({ key }) => {
                         draw()
                     }
                     if ((editMap[(player.position.y / point) - 1][(player.position.x / point)]) === 2) {
-                        console.log('big food')
                         editMap[(player.position.y / point) - 1][(player.position.x / point)] = 6
                         draw()
                         enemy.scared = true
@@ -260,7 +252,6 @@ addEventListener('keydown', ({ key }) => {
             case 'ArrowLeft':
                 if ((editMap[(player.position.y / point)][(player.position.x / point) - 1]) !== 1) {
                     if ((editMap[(player.position.y / point)][(player.position.x / point) - 1]) === 0) {
-                        console.log('small food')
                         score += 1
                         scoreEl.innerHTML = score
                         editMap[(player.position.y / point)][(player.position.x / point) - 1] = 6
@@ -268,7 +259,6 @@ addEventListener('keydown', ({ key }) => {
 
                     }
                     if ((editMap[(player.position.y / point)][(player.position.x / point) - 1]) === 2) {
-                        console.log('big food')
                         editMap[(player.position.y / point)][(player.position.x / point) - 1] = 6
                         enemy.scared = true
                         setTimeout(() => {
@@ -292,12 +282,10 @@ addEventListener('keydown', ({ key }) => {
                     if ((editMap[(player.position.y / point) + 1][(player.position.x / point)]) === 0) {
                         score += 10
                         scoreEl.innerHTML = score
-                        console.log('small food')
                         editMap[(player.position.y / point) + 1][(player.position.x / point)] = 6
                         draw()
                     }
                     if ((editMap[(player.position.y / point) + 1][(player.position.x / point)]) === 2) {
-                        console.log('big food')
                         editMap[(player.position.y / point) + 1][(player.position.x / point)] = 6
                         enemy.scared = true
                         setTimeout(() => {
@@ -319,14 +307,12 @@ addEventListener('keydown', ({ key }) => {
             case 'ArrowRight':
                 if ((editMap[(player.position.y / point)][(player.position.x / point) + 1]) !== 1) {
                     if ((editMap[(player.position.y / point)][(player.position.x / point) + 1]) === 0) {
-                        console.log('small food')
                         score += 10
                         scoreEl.innerHTML = score
                         editMap[(player.position.y / point)][(player.position.x / point) + 1] = 6
                         draw()
                     }
                     if ((editMap[(player.position.y / point)][(player.position.x / point) + 1]) === 2) {
-                        console.log('big food')
                         editMap[(player.position.y / point)][(player.position.x / point) + 1] = 6
                         enemy.scared = true
                         setTimeout(() => {
